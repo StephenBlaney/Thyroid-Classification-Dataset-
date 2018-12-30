@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="7.6.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="6.0.002" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="false" breakpoints="after" class="generate_data" compatibility="7.1.001" expanded="true" height="68" name="Generate Data" width="90" x="380" y="340">
+        <parameter key="target_function" value="gaussian mixture clusters"/>
+        <parameter key="number_examples" value="100"/>
+        <parameter key="number_of_attributes" value="3"/>
+        <parameter key="attributes_lower_bound" value="-10.0"/>
+        <parameter key="attributes_upper_bound" value="10.0"/>
+        <parameter key="gaussian_standard_deviation" value="10.0"/>
+        <parameter key="largest_radius" value="10.0"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="datamanagement" value="double_array"/>
+        <parameter key="data_management" value="auto"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="7.6.001" expanded="true" height="68" name="Retrieve dataset 1 thyroid" width="90" x="45" y="85">
+        <parameter key="repository_entry" value="../dataset 1 thyroid"/>
+      </operator>
+      <operator activated="false" class="detect_outlier_lof" compatibility="7.6.001" expanded="true" height="82" name="LOF" width="90" x="246" y="238">
+        <parameter key="minimal_points_lower_bound" value="10"/>
+        <parameter key="minimal_points_upper_bound" value="20"/>
+        <parameter key="distance_function" value="euclidian distance"/>
+      </operator>
+      <operator activated="false" breakpoints="after" class="add_noise" compatibility="7.6.001" expanded="true" height="103" name="Add Noise" width="90" x="246" y="340">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="create_view" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="random_attributes" value="1"/>
+        <parameter key="label_noise" value="0.05"/>
+        <parameter key="default_attribute_noise" value="0.0"/>
+        <list key="noise">
+          <parameter key="att3" value="2.0"/>
+          <parameter key="att2" value="2.0"/>
+          <parameter key="att3" value="1.5"/>
+        </list>
+        <parameter key="offset" value="0.0"/>
+        <parameter key="linear_factor" value="1.0"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="detect_outlier_distances" compatibility="7.6.001" expanded="true" height="82" name="Distance" width="90" x="246" y="85">
+        <parameter key="number_of_neighbors" value="10"/>
+        <parameter key="number_of_outliers" value="10"/>
+        <parameter key="distance_function" value="euclidian distance"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="7.6.001" expanded="true" height="103" name="Filter Examples" width="90" x="380" y="85">
+        <parameter key="parameter_string" value="outlier=true"/>
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="attribute_value_filter"/>
+        <parameter key="invert_filter" value="true"/>
+        <list key="filters_list"/>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="false" class="detect_outlier_densities" compatibility="7.6.001" expanded="true" height="82" name="Density" width="90" x="380" y="238">
+        <parameter key="distance" value="5.0"/>
+        <parameter key="proportion" value="0.95"/>
+        <parameter key="distance_function" value="euclidian distance"/>
+      </operator>
+      <connect from_op="Retrieve dataset 1 thyroid" from_port="output" to_op="Distance" to_port="example set input"/>
+      <connect from_op="Distance" from_port="example set output" to_op="Filter Examples" to_port="example set input"/>
+      <connect from_op="Filter Examples" from_port="example set output" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>
